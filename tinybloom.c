@@ -24,7 +24,9 @@ THE SOFTWARE.	*/
 #include <stdlib.h>
 #include <string.h>
 
-#include "tinybloom.h"
+#include <emmintrin.h>
+
+#include <tinybloom.h>
 
 #define GETBIT(a, n) ((a[n >> 5] & (1 << (n & 31))) > 0)
 #define SETBIT(a, n) (a[n >> 5] |= 1 << (n & 31))
@@ -55,11 +57,24 @@ void destroy_bfilter(bloom_filter* bFilter)
 
 void bfilter_add(const bloom_filter* bFilter, const unsigned* input)
 {
-	SETBIT(bFilter->filter, *input % (bFilter->num_buckets - 1));
+	SETBIT(bFilter->filter, *input % bFilter->num_buckets);
 }
 
 
 int bfilter_check(const bloom_filter* bFilter, const unsigned* input)
 {
-	return GETBIT(bFilter->filter, *input % (bFilter->num_buckets - 1));
+	return GETBIT(bFilter->filter, *input % bFilter->num_buckets);
 }
+
+/*void bfilter_check_sse2{const bloom_filter* bFilter, const unsigned* input, unsigned* output}
+{
+	__m128i a, b, c, d;
+
+	a = __mm_loadu_si128((__m128i*)input);
+	b = __mm_loadu_si128((__m128i*)input);
+	c = __mm_loadu_si128((__m128i*)input);
+	d = __mm_loadu_si128((__m128i*)input);
+
+	a = _mm_srli_epi32(a, 5);
+}
+*/

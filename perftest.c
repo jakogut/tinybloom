@@ -7,7 +7,7 @@
 #include <tinybloom.h>
 
 #define NUM_ITEMS 10000000
-#define NUM_BUCKETS NUM_ITEMS * 8
+#define NUM_BUCKETS NUM_ITEMS * 20
 
 int compare_unsigned(const void* a, const void* b)
 {
@@ -25,7 +25,9 @@ int main()
 
 	bloom_filter* bfilter = create_bfilter(NUM_BUCKETS);
 
-	printf("Generating arrays.\n\n");
+	printf("Using %lu kilobytes for filter.\n\n", (bfilter->filter_size * sizeof(unsigned)) / 1024);
+
+	printf("Generating randomized input.\n\n");
 
 	int i;
 	for(i = 0; i < NUM_ITEMS; i++)
@@ -36,7 +38,11 @@ int main()
 		search_targets[i] = rand();
 	}
 
+
+	printf ("Sorting array.\n\n");
+
 	qsort(test_array, NUM_ITEMS, sizeof(unsigned), compare_unsigned);
+
 
 	struct timespec begin, end;
 	double time;
