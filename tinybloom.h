@@ -27,13 +27,8 @@ THE SOFTWARE.	*/
 extern "C" {
 #endif
 
-// Take a void argument, and hash it into a positive integer
-typedef unsigned (*bfilter_hash)(const void*, size_t);
-
 typedef struct
 {
-	bfilter_hash hash;
-
 	size_t filter_size;
 	unsigned int* filter;
 
@@ -41,13 +36,13 @@ typedef struct
 
 } bloom_filter;
 
-bloom_filter* create_bfilter(size_t size, bfilter_hash hash);
+bloom_filter* create_bfilter(size_t size);
 void destroy_bfilter(bloom_filter* bFilter);
 
-inline void bfilter_add(const bloom_filter* bFilter, const void* input, size_t input_size);
+inline void bfilter_add(const bloom_filter* bFilter, const unsigned* input);
 
 // Checks the bloom filter for potential matches; may return a false positive.
-inline int bfilter_check(const bloom_filter* bFilter, const void* input, size_t input_size);
+inline int bfilter_check(const bloom_filter* bFilter, const unsigned* input);
 
 #ifdef __cplusplus
 }

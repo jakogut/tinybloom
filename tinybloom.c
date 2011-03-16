@@ -29,7 +29,7 @@ THE SOFTWARE.	*/
 #define GETBIT(a, n) ((a[n >> 5] & (1 << (n & 31))) > 0)
 #define SETBIT(a, n) (a[n >> 5] |= 1 << (n & 31))
 
-bloom_filter* create_bfilter(size_t size, bfilter_hash hash_func)
+bloom_filter* create_bfilter(size_t size)
 {
 	bloom_filter* bFilter;
 	bFilter = (bloom_filter*)malloc(sizeof(bloom_filter));
@@ -37,8 +37,6 @@ bloom_filter* create_bfilter(size_t size, bfilter_hash hash_func)
 	bFilter->filter_size = (size / (sizeof(unsigned) * 8)) + ((size % sizeof(unsigned) * 8) ? 1 : 0);
 
 	bFilter->num_buckets = (bFilter->filter_size) * sizeof(unsigned) * 8;
-
-	bFilter->hash = hash_func;
 
 	bFilter->filter = (unsigned*)malloc((bFilter->filter_size) * sizeof(unsigned));
 	memset(bFilter->filter, 0, bFilter->filter_size);
@@ -55,13 +53,13 @@ void destroy_bfilter(bloom_filter* bFilter)
 	bFilter = NULL;
 }
 
-void bfilter_add(const bloom_filter* bFilter, const void* input, size_t input_size)
+void bfilter_add(const bloom_filter* bFilter, const unsigned* input)
 {
-	SETBIT(bFilter->filter, bFilter->hash(input, input_size) % (bFilter->num_buckets - 1));
+	SETBIT(bFilter->filter, *input % (bFilter->num_buckets - 1));
 }
 
 
-int bfilter_check(const bloom_filter* bFilter, const void* input, size_t input_size)
+int bfilter_check(const bloom_filter* bFilter, const unsigned* input)
 {
-	return GETBIT(bFilter->filter, (bFilter->hash(input, input_size) % (bFilter->num_buckets - 1)));
+	return GETBIT(bFilter->filter, *input % (bFilter->num_buckets - 1));
 }

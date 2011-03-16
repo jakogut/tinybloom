@@ -5,7 +5,7 @@
 #include <tinybloom.h>
 
 #define NUM_ITEMS 16384
-#define NUM_BUCKETS NUM_ITEMS * 2
+#define NUM_BUCKETS NUM_ITEMS * 4
 
 int shitty_search(const unsigned int* array, unsigned int target, size_t size)
 {
@@ -14,11 +14,6 @@ int shitty_search(const unsigned int* array, unsigned int target, size_t size)
 		if(array[i] == target) return 1;
 
 	return 0;
-}
-
-unsigned pass(const void* item, size_t size)
-{
-	return *(unsigned*)item;
 }
 
 int main()
@@ -30,7 +25,7 @@ int main()
 	unsigned* test_array = malloc(sizeof(unsigned) * NUM_ITEMS);
 
 	// Create a bloom filter with (2 << 13) buckets
-	bloom_filter* bFilter = create_bfilter(NUM_BUCKETS, pass);
+	bloom_filter* bFilter = create_bfilter(NUM_BUCKETS);
 
 	printf("Using %lu kilobytes for filter.\n\n", (bFilter->filter_size * sizeof(unsigned)) / 1024);
 
@@ -40,7 +35,7 @@ int main()
 	for(i = 0; i < NUM_ITEMS; i++)
 	{
 		filter_contents[i] = rand();
-		bfilter_add(bFilter, &filter_contents[i], sizeof(unsigned));
+		bfilter_add(bFilter, &filter_contents[i]);
 
 		// Fill our test array with a 50/50 mix of numbers that have been entered into the filter, and random numbers
 		if(rand() & 1)
@@ -54,7 +49,7 @@ int main()
 		int filter_present = 0;
 		int array_present = 0;
 
-		filter_present = bfilter_check(bFilter, &test_array[i], sizeof(unsigned));
+		filter_present = bfilter_check(bFilter, &test_array[i]);
 
 		array_present = shitty_search(filter_contents, test_array[i], NUM_ITEMS);
 

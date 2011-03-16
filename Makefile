@@ -13,6 +13,9 @@ tinybloom_static: tinybloom.o
 test: tinybloom_static test.o
 	$(CC) test.o -o test -ltinybloom
 
+perftest: tinybloom_static perftest.o
+	$(CC) perftest.o -o perftest -ltinybloom -lrt
+
 install:
 	cp -f $(LIBNAME_STATIC) /usr/lib/
 	cp -f tinybloom.h /usr/include/
@@ -25,7 +28,7 @@ uninstall:
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf *.o *.a *.so test
+	rm -rf *.o *.a *.so test perftest
 
 .PHONY: clean
 .SILENT: clean
