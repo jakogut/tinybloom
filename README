@@ -1,0 +1,16 @@
+// INSTALLATION //
+
+Tinybloom is a small, lightweight library that provides a simple, 
+easy to use implementation of a bloom filter.
+
+To compile tinybloom, simply run:
+
+| make && make install
+
+To compile the tinybloom function test, run:
+
+| make test
+
+To compile the tinybloom performance test, run:
+
+| make perftest
