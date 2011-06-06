@@ -20,11 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.	*/
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <emmintrin.h>
 
 #include <tinybloom.h>
 
@@ -65,16 +62,3 @@ int bfilter_check(const bloom_filter* bFilter, const unsigned* input)
 {
 	return GETBIT(bFilter->filter, *input % bFilter->num_buckets);
 }
-
-/*void bfilter_check_sse2{const bloom_filter* bFilter, const unsigned* input, unsigned* output}
-{
-	__m128i a, b, c, d;
-
-	a = __mm_loadu_si128((__m128i*)input);
-	b = __mm_loadu_si128((__m128i*)input);
-	c = __mm_loadu_si128((__m128i*)input);
-	d = __mm_loadu_si128((__m128i*)input);
-
-	a = _mm_srli_epi32(a, 5);
-}
-*/
