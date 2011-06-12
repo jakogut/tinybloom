@@ -23,7 +23,7 @@ THE SOFTWARE.	*/
 #include <stdlib.h>
 #include <string.h>
 
-#include <tinybloom.h>
+#include "tinybloom.h"
 
 #define GETBIT(a, n) ((a[n >> 5] & (1 << (n & 31))) > 0)
 #define SETBIT(a, n) (a[n >> 5] |= 1 << (n & 31))
@@ -61,4 +61,15 @@ void bfilter_add(const bloom_filter* bFilter, const unsigned* input)
 int bfilter_check(const bloom_filter* bFilter, const unsigned* input)
 {
 	return GETBIT(bFilter->filter, *input % bFilter->num_buckets);
+}
+
+int bfilter_intersect(bloom_filter* a, bloom_filter* b)
+{
+	if(a->filter_size != b->filter_size) return 1;
+
+	int i;
+	for(i = 0; i < a->filter_size; i++)
+		a->filter[i] |= b->filter[i];
+
+	return 0;
 }

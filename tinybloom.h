@@ -44,6 +44,9 @@ inline void bfilter_add(const bloom_filter* bFilter, const unsigned* input);
 // Checks the bloom filter for potential matches; may return a false positive.
 inline int bfilter_check(const bloom_filter* bFilter, const unsigned* input);
 
+// Binary OR for bloom filters
+inline int bfilter_intersect(bloom_filter* a, bloom_filter* b);
+
 #ifdef __cplusplus
 }
 #endif
