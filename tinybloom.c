@@ -45,11 +45,8 @@ bloom_filter* create_bfilter(size_t size)
 
 void destroy_bfilter(bloom_filter* bFilter)
 {
-	if(bFilter->filter) free(bFilter->filter);
+	if(bFilter && bFilter->filter) free(bFilter->filter);
 	if(bFilter) free(bFilter);
-
-	bFilter->filter = NULL;
-	bFilter = NULL;
 }
 
 void bfilter_add(const bloom_filter* bFilter, const unsigned* input)
